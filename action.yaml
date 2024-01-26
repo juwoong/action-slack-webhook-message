@@ -11,6 +11,7 @@ runs:
   using: 'composite'
   steps:
   - name: Send message to Slack
+    shell: bash
     env:
       SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
       SHORT_SHA: ${{ inputs.short_sha }}
