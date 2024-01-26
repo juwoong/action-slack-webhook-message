@@ -1,0 +1,68 @@
+name: 'action-slack-webhook-message'
+description: 'Send message to Slack with Webhook URL'
+inputs:
+  slack_webhook_url: 
+    description: 'Slack Webhook URL'
+    required: true
+  short_sha:
+    description: 'Short SHA'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+  - name: Send message to Slack
+    env:
+      SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
+      SHORT_SHA: ${{ inputs.short_sha }}
+    run: |
+      COMMIT_MESSAGE=$(git log -1 --pretty=format:%s)
+      BRANCH_NAME=${GITHUB_REF#refs/heads/}
+      COMMIT_SHA=$(git rev-parse HEAD)
+      CURRENT_TIME=$(date --iso-8601=seconds)
+      USER_INFO=$(curl https://api.github.com/users/$GITHUB_ACTOR)
+      GITHUB_ACTOR_IMAGE=$(echo $USER_INFO | jq -r '.avatar_url')
+      GITHUB_ACTOR_URL=$(echo $USER_INFO | jq -r '.html_url')
+
+      curl -X POST -H 'Content-type: application/json' --data @<(cat <<EOF
+      {
+        "attachments": [
+          {
+            "mrkdwn_in": ["text", "pretext", "fields"],
+            "color": "#36a64f",
+            "pretext": ":hammer_and_wrench: *Docker image builds successfully*",
+            "author_name": "$GITHUB_ACTOR",
+            "author_link": "$GITHUB_ACTOR_URL",
+            "author_icon": "$GITHUB_ACTOR_IMAGE",
+            "title": "$GITHUB_REPOSITORY",
+            "title_link": "https://github.com/$GITHUB_REPOSITORY",
+            "fields": [
+              {
+                "title": "Commit message",
+                "value": "$COMMIT_MESSAGE",
+                "short": false
+              },
+              {
+                "title": "branch",
+                "value": "$BRANCH_NAME",
+                "short": true
+              },
+              {
+                "title": "commit",
+                "value": "<https://github.com/$GITHUB_REPOSITORY/commit/$COMMIT_SHA|$SHORT_SHA>",
+                "short": true
+              },
+              {
+                "title": "pushed time",
+                "value": "$CURRENT_TIME",
+                "short": false
+              }
+            ]
+          }
+        ]
+      }
+      EOF
+      ) $SLACK_WEBHOOK_URL
+branding:
+  icon: 'message-circle'
+  color: 'blue'
+
