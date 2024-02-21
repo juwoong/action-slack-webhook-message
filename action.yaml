@@ -18,6 +18,7 @@ runs:
     env:
       SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
       SHORT_SHA: ${{ inputs.short_sha }}
+      IMAGE_NAME: ${{ inputs.image_name }}
     run: |
       COMMIT_MESSAGE=$(git log -1 --pretty=format:%s)
       BRANCH_NAME=${GITHUB_REF#refs/heads/}
