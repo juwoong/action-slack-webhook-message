@@ -50,7 +50,7 @@ runs:
                 "title": "image",
                 "value": "$IMAGE_NAME",
                 "short": true
-              }
+              },
               {
                 "title": "branch",
                 "value": "$BRANCH_NAME",
