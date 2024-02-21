@@ -9,4 +9,7 @@ inputs:
   short_sha:
     description: 'Short SHA'
     required: true
+  image_name:
+    description: 'Image name'
+    required: true
 ```

@@ -7,6 +7,9 @@ inputs:
   short_sha:
     description: 'Short SHA'
     required: true
+  image_name:
+    description: 'Docker image name'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -43,8 +46,18 @@ runs:
                 "short": false
               },
               {
+                "title": "image",
+                "value": "$IMAGE_NAME",
+                "short": true
+              }
+              {
                 "title": "branch",
                 "value": "$BRANCH_NAME",
+                "short": true
+              },
+              {
+                "title": "pushed time",
+                "value": "$CURRENT_TIME",
                 "short": true
               },
               {
@@ -52,11 +65,6 @@ runs:
                 "value": "<https://github.com/$GITHUB_REPOSITORY/commit/$COMMIT_SHA|$SHORT_SHA>",
                 "short": true
               },
-              {
-                "title": "pushed time",
-                "value": "$CURRENT_TIME",
-                "short": false
-              }
             ]
           }
         ]
