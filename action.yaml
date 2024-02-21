@@ -65,7 +65,7 @@ runs:
                 "title": "commit",
                 "value": "<https://github.com/$GITHUB_REPOSITORY/commit/$COMMIT_SHA|$SHORT_SHA>",
                 "short": true
-              },
+              }
             ]
           }
         ]
